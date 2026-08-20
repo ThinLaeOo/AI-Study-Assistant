@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Flashcards{% endblock %}
+{% block content %}
+<h2>Generated Flashcards</h2>
+<div class="row">
+    {% for card in flashcards %}
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <strong>Q:</strong> {{ card.question }} <br>
+                <strong>A:</strong> {{ card.answer }}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

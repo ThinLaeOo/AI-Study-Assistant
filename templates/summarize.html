@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Summarize Notes{% endblock %}
+{% block content %}
+<h2>Summarized Notes</h2>
+{% if summary %}
+    <div class="card">
+        <div class="card-body">
+            <p>{{ summary }}</p>
+        </div>
+    </div>
+{% else %}
+    <p>No summary available. Please upload a file first.</p>
+{% endif %}
+{% endblock %}

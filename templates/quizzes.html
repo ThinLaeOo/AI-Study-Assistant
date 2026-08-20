@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Quizzes{% endblock %}
+{% block content %}
+<h2>Generated Quiz</h2>
+{% for quiz in quizzes %}
+<div class="card mb-3">
+    <div class="card-body">
+        <p><strong>{{ quiz.question }}</strong></p>
+        <ul>
+            {% for option in quiz.options %}
+            <li>{{ option }}</li>
+            {% endfor %}
+        </ul>
+        <p><em>Answer: {{ quiz.answer }}</em></p>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
