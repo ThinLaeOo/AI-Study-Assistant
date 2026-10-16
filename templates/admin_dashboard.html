@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <h2 class="mb-4 text-center">Welcome to Your Dashboard</h2>
+    <div class="row text-center">
+      <div class="col-md-4">
+        <div class="card shadow-sm mb-3">
+          <div class="card-body">
+            <h5 class="card-title">👥 Users</h5>
+            <p class="card-text">{{ total_users }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card shadow-sm mb-3">
+          <div class="card-body">
+            <h5 class="card-title">📂 Files</h5>
+            <p class="card-text">{{ total_files }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card shadow-sm mb-3">
+          <div class="card-body">
+            <h5 class="card-title">⚡ Alerts</h5>
+            <p class="card-text">{{ alerts }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

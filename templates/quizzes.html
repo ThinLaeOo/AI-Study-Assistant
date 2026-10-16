@@ -1,18 +1,117 @@
 {% extends "base.html" %}
 {% block title %}Quizzes{% endblock %}
 {% block content %}
-<h2>Generated Quiz</h2>
-{% for quiz in quizzes %}
-<div class="card mb-3">
-    <div class="card-body">
-        <p><strong>{{ quiz.question }}</strong></p>
-        <ul>
-            {% for option in quiz.options %}
-            <li>{{ option }}</li>
-            {% endfor %}
-        </ul>
-        <p><em>Answer: {{ quiz.answer }}</em></p>
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <h2 class="mb-4 text-center text-white">Quiz Generator</h2>
+
+    <!-- Input Section -->
+    <form method="POST" enctype="multipart/form-data" class="glass-card p-4 mb-4">
+      <div class="mb-3">
+        <label class="form-label text-light">Paste or Write Text</label>
+        <textarea name="text" class="form-control glass-input" rows="4" placeholder="Enter text here..."></textarea>
+      </div>
+      <div class="mb-3">
+        <label class="form-label text-light">Upload File</label>
+        <input type="file" name="file" class="form-control glass-input">
+      </div>
+      <button type="submit" class="btn glass-btn w-100">Generate Quiz</button>
+    </form>
+
+    {% if quizzes and quizzes|length > 0 %}
+    <div id="quiz-container" class="glass-card p-4 text-center">
+      <h5 id="quiz-question" class="text-white">{{ quizzes[0].question }}</h5>
+      <form id="quiz-form" class="mt-3">
+        <div id="quiz-options"></div>
+        <button type="button" id="submit-btn" class="btn glass-btn mt-3">Submit Answer</button>
+      </form>
+
+      <p class="mt-3 text-light"><span id="counter">Question 1 of {{ quizzes|length }}</span></p>
+      <p class="mt-3"><strong id="feedback" class="text-light"></strong></p>
+
+      <div class="d-flex justify-content-between mt-4">
+        <button id="prev-btn" class="btn glass-btn">Previous</button>
+        <button id="next-btn" class="btn glass-btn">Next</button>
+      </div>
+
+      <p class="mt-3"><strong id="score" class="text-light"></strong></p>
     </div>
+
+    <script>
+      const quizzes = {{ quizzes|tojson|safe }};
+      let currentIndex = 0;
+      let score = 0;
+      let answered = Array(quizzes.length).fill(false);
+
+      const questionEl = document.getElementById("quiz-question");
+      const optionsEl = document.getElementById("quiz-options");
+      const counterEl = document.getElementById("counter");
+      const feedbackEl = document.getElementById("feedback");
+      const scoreEl = document.getElementById("score");
+
+      function renderQuiz() {
+        questionEl.textContent = quizzes[currentIndex].question;
+        optionsEl.innerHTML = "";
+        feedbackEl.textContent = "";
+        quizzes[currentIndex].options.forEach((opt, i) => {
+          const div = document.createElement("div");
+          div.className = "form-check text-start";
+          div.innerHTML = `
+            <input class="form-check-input" type="radio" name="option" id="opt${i}" value="${opt}">
+            <label class="form-check-label text-light" for="opt${i}">${opt}</label>
+          `;
+          optionsEl.appendChild(div);
+        });
+        counterEl.textContent = `Question ${currentIndex + 1} of ${quizzes.length}`;
+      }
+
+      function submitAnswer() {
+        const selected = document.querySelector('input[name="option"]:checked');
+        if (!selected) {
+          feedbackEl.textContent = "⚠️ Please select an answer or click Next to skip.";
+          return;
+        }
+        answered[currentIndex] = true;
+        const chosen = selected.value.trim().toLowerCase();
+        const correct = quizzes[currentIndex].answer.trim().toLowerCase();
+
+        if (chosen === correct) {
+          feedbackEl.textContent = "✅ Correct!";
+          score++;
+        } else {
+          feedbackEl.textContent = "❌ Wrong!";
+        }
+
+        setTimeout(nextQuestion, 1000);
+      }
+
+      function nextQuestion() {
+        if (!answered[currentIndex]) {
+          feedbackEl.textContent = "❌ Skipped!";
+        }
+        if (currentIndex < quizzes.length - 1) {
+          currentIndex++;
+          renderQuiz();
+        } else {
+          scoreEl.textContent = `Final Score: ${score}/${quizzes.length}`;
+          feedbackEl.textContent = "🎉 Quiz Completed!";
+        }
+      }
+
+      function prevQuestion() {
+        if (currentIndex > 0) {
+          currentIndex--;
+          renderQuiz();
+        }
+      }
+
+      document.getElementById("submit-btn").onclick = submitAnswer;
+      document.getElementById("next-btn").onclick = nextQuestion;
+      document.getElementById("prev-btn").onclick = prevQuestion;
+
+      renderQuiz();
+    </script>
+    {% endif %}
+  </div>
 </div>
-{% endfor %}
 {% endblock %}

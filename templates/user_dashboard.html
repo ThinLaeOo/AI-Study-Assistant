@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+
+  <!-- Dashboard Title -->
+  <h2 class="text-center mb-5 text-white">AI Study Assistant Dashboard</h2>
+
+  <!-- Feature Cards -->
+  <div class="row justify-content-center">
+
+    <div class="glass-card p-4 mt-4">
+
+      <h4>Recent Flashcards</h4>
+
+      {% if recent_flashcards %}
+      <ul>
+        {% for card in recent_flashcards %}
+        <li>{{ card.topic[:50]}}...</li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>No flashcards generated yet.</p>
+      {% endif %}
+
+    </div>
+
+    <div class="glass-card p-4 mt-4 mb-4">
+
+        <h4>Recent Quizzes</h4>
+
+        {% if recent_quizzes %}
+            <ul>
+            {% for quiz in recent_quizzes %}
+                <li>{{ quiz.Column[:50] }}...</li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No quizzes generated yet.</p>
+        {% endif %}
+
+    </div>
+
+    <!-- Summarize -->
+    <div class="col-md-4 mb-4">
+      <div class="glass-card p-4 text-center">
+        <h5 class="mb-3">Summarize</h5>
+        <p>Upload notes or text to generate summaries.</p>
+        <a href="{{ url_for('summarize') }}" class="btn btn-light">Go to Summarize</a>
+      </div>
+    </div>
+
+    <!-- Flashcards -->
+    <div class="col-md-4 mb-4">
+      <div class="glass-card p-4 text-center">
+        <h5 class="mb-3">Flashcards</h5>
+        <p>Create and review flashcards from your study material.</p>
+        <a href="{{ url_for('flashcards') }}" class="btn btn-light">Go to Flashcards</a>
+      </div>
+    </div>
+
+    <!-- Quizzes -->
+    <div class="col-md-4 mb-4">
+      <div class="glass-card p-4 text-center">
+        <h5 class="mb-3">Quizzes</h5>
+        <p>Test your knowledge with auto‑generated quizzes.</p>
+        <a href="{{ url_for('quizzes') }}" class="btn btn-light">Go to Quizzes</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

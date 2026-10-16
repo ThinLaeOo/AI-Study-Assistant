@@ -1,17 +1,81 @@
 {% extends "base.html" %}
 {% block title %}Flashcards{% endblock %}
 {% block content %}
-<h2>Generated Flashcards</h2>
-<div class="row">
-    {% for card in flashcards %}
-    <div class="col-md-4 mb-3">
-        <div class="card">
-            <div class="card-body">
-                <strong>Q:</strong> {{ card.question }} <br>
-                <strong>A:</strong> {{ card.answer }}
-            </div>
-        </div>
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <h2 class="mb-4 text-center text-white">Flashcards Generator</h2>
+
+    <!-- Input Section -->
+    <form method="POST" enctype="multipart/form-data" class="glass-card p-4 mb-4">
+      <div class="mb-3">
+        <label class="form-label text-light">Paste or Write Text</label>
+        <textarea name="text" class="form-control glass-input" rows="4" placeholder="Enter text here..."></textarea>
+      </div>
+      <div class="mb-3">
+        <label class="form-label text-light">Upload File</label>
+        <input type="file" name="file" class="form-control glass-input">
+      </div>
+      <button type="submit" class="btn glass-btn w-100">Generate Flashcards</button>
+    </form>
+
+    {% if cards and cards|length > 0 %}
+    <div id="flashcard-container" class="glass-card p-4 text-center">
+      <h5 id="flashcard-question" class="text-white">{{ cards[0].question }}</h5>
+      <p id="flashcard-answer" class="d-none text-light">{{ cards[0].answer }}</p>
+      <button id="toggle-btn" class="btn glass-btn mt-3">Show Answer</button>
+
+      <!-- Counter -->
+      <p class="mt-3 text-light"><span id="counter">Flashcard 1 of {{ cards|length }}</span></p>
+
+      <!-- Navigation -->
+      <div class="d-flex justify-content-between mt-4">
+        <button id="prev-btn" class="btn glass-btn">Previous</button>
+        <button id="next-btn" class="btn glass-btn">Next</button>
+      </div>
     </div>
-    {% endfor %}
+    <script>
+      const cards = {{ cards|tojson|safe }};
+      let currentIndex = 0;
+      const questionEl = document.getElementById("flashcard-question");
+      const answerEl = document.getElementById("flashcard-answer");
+      const toggleBtn = document.getElementById("toggle-btn");
+      const prevBtn = document.getElementById("prev-btn");
+      const nextBtn = document.getElementById("next-btn");
+      const counterEl = document.getElementById("counter");
+
+      function updateFlashcard() {
+        questionEl.textContent = cards[currentIndex].question;
+        answerEl.textContent = cards[currentIndex].answer;
+        answerEl.classList.add("d-none");
+        toggleBtn.textContent = "Show Answer";
+        counterEl.textContent = `Flashcard ${currentIndex + 1} of ${cards.length}`;
+      }
+
+      toggleBtn.addEventListener("click", () => {
+        if (answerEl.classList.contains("d-none")) {
+          answerEl.classList.remove("d-none");
+          toggleBtn.textContent = "Hide Answer";
+        } else {
+          answerEl.classList.add("d-none");
+          toggleBtn.textContent = "Show Answer";
+        }
+      });
+
+      prevBtn.addEventListener("click", () => {
+        if (currentIndex > 0) {
+          currentIndex--;
+          updateFlashcard();
+        }
+      });
+
+      nextBtn.addEventListener("click", () => {
+        if (currentIndex < cards.length - 1) {
+          currentIndex++;
+          updateFlashcard();
+        }
+      });
+    </script>
+    {% endif %}
+  </div>
 </div>
 {% endblock %}

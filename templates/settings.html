@@ -1,16 +1,68 @@
 {% extends "base.html" %}
 {% block title %}Settings{% endblock %}
 {% block content %}
-<h2>Admin Settings</h2>
-<form method="POST">
-    <div class="mb-3">
-        <label for="email" class="form-label">Change Email</label>
-        <input type="email" class="form-control" id="email" name="email">
+<div class="container mt-5">
+    <h2 class="text-center text-white mb-5">Account Settings</h2>
+
+    <div class="row justify-content-center">
+        <!-- Left Side: Account & Preferences -->
+        <div class="col-md-6">
+            <div class="glass-card p-4 mb-4">
+                <h5 class="text-white mb-3">Account Setting</h5>
+                <form method="POST" enctype="multipart/form-data">
+                    <p class="text-light text-center mb-3">Logged in as: {{ user.email }}</p>
+                    <div class="mb-3">
+                        <input type="email" class="form-control glass-input" id="email" name="email"
+                            placeholder="Update Email...">
+                    </div>
+                    <button type="submit" class="btn glass-btn w-100 mb-3">Update Email</button>
+
+                    <h5 class="text-white mt-4 mb-3">Password Setting</h5>
+                    <input type="password" class="form-control glass-input mb-3" name="new_password"
+                        placeholder="New Password">
+                    <input type="password" class="form-control glass-input mb-3" name="current_password"
+                        placeholder="Current Password">
+                    <button type="submit" class="btn glass-btn w-100 mb-3">Update Password</button>
+
+                    <h5 class="text-white mt-4 mb-3">Preferences</h5>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <span class="text-light">Dark Mode</span>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="darkModeSwitch">
+                            <label class="form-check-label text-light" for="darkModeSwitch">Toggle</label>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn glass-btn w-100 mt-4" onclick="logout()">Log Out</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Side: Profile Picture -->
+        <div class="col-md-4">
+            <div class="glass-card p-4 text-center">
+                <div class="avatar-circle mb-3">
+                    {% if user.avatar %}
+                    <img src="{{ url_for('static', filename='uploads/' + user.avatar) }}" class="avatar-img"
+                        alt="Profile Picture">
+                    {% else %}
+                    <div class="avatar-placeholder">+</div>
+                    {% endif %}
+
+                </div>
+                <form method="POST" enctype="multipart/form-data">
+                    <input type="file" name="avatar" class="form-control glass-input mb-3">
+                    <button type="submit" class="btn glass-btn w-100 mb-2">Change Avatar</button>
+                    <button type="submit" class="btn glass-btn w-100">Update</button>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="mb-3">
-        <label for="password" class="form-label">Change Password</label>
-        <input type="password" class="form-control" id="password" name="password">
-    </div>
-    <button type="submit" class="btn btn-success">Update</button>
-</form>
+</div>
+
+<script>
+    function logout() {
+        window.location.href = "{{ url_for('logout') }}";
+    }
+</script>
 {% endblock %}

@@ -1,14 +1,39 @@
 {% extends "base.html" %}
-{% block title %}Summarize Notes{% endblock %}
+{% block title %}Summarize{% endblock %}
 {% block content %}
-<h2>Summarized Notes</h2>
-{% if summary %}
-    <div class="card">
-        <div class="card-body">
-            <p>{{ summary }}</p>
-        </div>
+<div class="container mt-5">
+
+    <!-- Page Title -->
+    <h2 class="text-center text-white mb-4">Summarize Your Notes</h2>
+
+    <!-- Glass Form Card -->
+    <div class="glass-card p-4 mb-4">
+        <form method="POST" action="{{ url_for('summarize') }}" enctype="multipart/form-data">
+            
+            <!-- Textarea -->
+            <div class="mb-3">
+                <textarea class="form-control glass-input" name="text" rows="4" 
+                          placeholder="Paste your notes here..."></textarea>
+            </div>
+
+            <!-- File Upload -->
+            <div class="mb-3 text-center">
+                <input type="file" name="file" class="form-control glass-input">
+                <p class="mt-2 text-light">Drag your file here or click to upload</p>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn glass-btn w-100">Summarize</button>
+        </form>
     </div>
-{% else %}
-    <p>No summary available. Please upload a file first.</p>
-{% endif %}
+
+    <!-- Summary Result -->
+    {% if summary %}
+    <div class="glass-card p-4 mt-4">
+        <h5 class="text-white">Summary Result</h5>
+        <p class="text-light">{{ summary }}</p>
+    </div>
+    {% endif %}
+
+</div>
 {% endblock %}
