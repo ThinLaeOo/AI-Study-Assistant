@@ -1,0 +1,437 @@
+
+{% extends "admin_base.html" %}
+{% block title %}Manage Users | AI Study Assistant{% endblock %}
+
+{% block content %}
+<div class="management-page py-4 py-lg-5">
+
+    <!-- PAGE HEADER -->
+    <section class="management-hero mb-4">
+        <div class="d-flex align-items-center
+                    justify-content-between flex-wrap gap-3">
+            <div>
+                <span class="management-eyebrow">
+                    <i class="bi bi-shield-check me-2"></i>
+                    ADMINISTRATION
+                </span>
+
+                <h1 class="management-title mt-2 mb-2">
+                    User Management
+                </h1>
+
+                <p class="management-muted mb-0">
+                    View accounts, update user details,
+                    and manage platform access.
+                </p>
+            </div>
+
+            <div class="management-hero-icon">
+                <i class="bi bi-people-fill"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- FLASH MESSAGES -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}
+                    alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    {% endwith %}
+
+    <!-- SEARCH -->
+    <section class="management-panel mb-4">
+        <div class="management-panel-header">
+            <div>
+                <h2>
+                    <i class="bi bi-search me-2"></i>
+                    Find a User
+                </h2>
+                <p class="management-muted mb-0">
+                    Search registered accounts.
+                </p>
+            </div>
+        </div>
+
+        <div class="management-panel-body">
+            <form method="GET"
+                  action="{{ url_for('manage_users') }}">
+                <div class="row g-3">
+                    <div class="col-md-9">
+                        <label for="userSearch" class="form-label">
+                            Search users
+                        </label>
+                        <input type="search"
+                               id="userSearch"
+                               name="search"
+                               value="{{ search|default('', true) }}"
+                               class="form-control management-input"
+                               placeholder="Enter name or email">
+                    </div>
+
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button type="submit"
+                                class="btn management-primary-btn w-100">
+                            <i class="bi bi-search me-2"></i>
+                            Search
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- USERS TABLE -->
+    <section class="management-panel">
+        <div class="management-panel-header">
+            <div>
+                <h2>
+                    <i class="bi bi-person-lines-fill me-2"></i>
+                    Registered Users
+                </h2>
+                <p class="management-muted mb-0">
+                    {{ users|length }} account(s) in this view
+                </p>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table management-table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col">User</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                {% if user.avatar %}
+                                <img
+                                    src="{{ url_for('static', filename='uploads/' + user.avatar) }}"
+                                    alt=""
+                                    class="management-avatar">
+                                {% else %}
+                                <div class="management-avatar-placeholder">
+                                    {{ (user.name or '?')[0]|upper }}
+                                </div>
+                                {% endif %}
+
+                                <div>
+                                    <strong class="management-user-name">
+                                        {{ user.name }}
+                                    </strong>
+                                    <div class="management-muted small">
+                                        ID #{{ user.id }}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td class="management-email">
+                            {{ user.email }}
+                        </td>
+
+                        <td>
+                            {% if user.role == 'admin' %}
+                            <span class="management-role role-admin">
+                                <i class="bi bi-shield-lock"></i>
+                                Admin
+                            </span>
+                            {% else %}
+                            <span class="management-role role-student">
+                                <i class="bi bi-mortarboard"></i>
+                                Student
+                            </span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <div class="d-flex flex-wrap gap-2">
+                                <button type="button"
+                                        class="btn management-action-btn"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#viewUser{{ user.id }}">
+                                    <i class="bi bi-eye"></i>
+                                    View
+                                </button>
+
+                                <button type="button"
+                                        class="btn management-action-btn"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editUser{{ user.id }}">
+                                    <i class="bi bi-pencil-square"></i>
+                                    Edit
+                                </button>
+
+                                <button type="button"
+                                        class="btn management-action-btn action-danger"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteUser{{ user.id }}"
+                                        {% if user.id == current_admin_id %}
+                                        disabled
+                                        title="You cannot delete your own account"
+                                        {% endif %}>
+                                    <i class="bi bi-trash"></i>
+                                    Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4">
+                            <div class="management-empty-state">
+                                <i class="bi bi-people"></i>
+                                <h3>No users found</h3>
+                                <p>Try a different search term.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+<!-- MODALS -->
+{% for user in users %}
+
+<!-- VIEW USER -->
+<div class="modal fade" id="viewUser{{ user.id }}"
+     tabindex="-1"
+     aria-labelledby="viewUserTitle{{ user.id }}"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content management-modal">
+            <div class="modal-header">
+                <h2 class="modal-title fs-5"
+                    id="viewUserTitle{{ user.id }}">
+                    <i class="bi bi-person-circle me-2"></i>
+                    User Details
+                </h2>
+                <button type="button" class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    {% if user.avatar %}
+                    <img
+                        src="{{ url_for('static', filename='uploads/' + user.avatar) }}"
+                        alt=""
+                        class="management-avatar management-avatar-large">
+                    {% else %}
+                    <div class="management-avatar-placeholder
+                                management-avatar-large mx-auto">
+                        {{ (user.name or '?')[0]|upper }}
+                    </div>
+                    {% endif %}
+
+                    <h3 class="fs-5 mt-3 mb-1">
+                        {{ user.name }}
+                    </h3>
+                    <p class="management-muted mb-0">
+                        {{ user.email }}
+                    </p>
+                </div>
+
+                <div class="management-detail-row">
+                    <span>User ID</span>
+                    <strong>#{{ user.id }}</strong>
+                </div>
+                <div class="management-detail-row">
+                    <span>Name</span>
+                    <strong>{{ user.name }}</strong>
+                </div>
+                <div class="management-detail-row">
+                    <span>Email</span>
+                    <strong>{{ user.email }}</strong>
+                </div>
+                <div class="management-detail-row">
+                    <span>Role</span>
+                    <strong>{{ user.role|title }}</strong>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn management-secondary-btn"
+                        data-bs-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- EDIT USER -->
+<div class="modal fade" id="editUser{{ user.id }}"
+     tabindex="-1"
+     aria-labelledby="editUserTitle{{ user.id }}"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content management-modal">
+            <form method="POST"
+                  action="{{ url_for('update_user', user_id=user.id) }}">
+                <input type="hidden" name="csrf_token"
+                       value="{{ csrf_token() }}">
+
+                <div class="modal-header">
+                    <h2 class="modal-title fs-5"
+                        id="editUserTitle{{ user.id }}">
+                        <i class="bi bi-pencil-square me-2"></i>
+                        Edit User
+                    </h2>
+                    <button type="button" class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="name{{ user.id }}"
+                               class="form-label">
+                            Full Name
+                        </label>
+                        <input type="text"
+                               id="name{{ user.id }}"
+                               name="name"
+                               value="{{ user.name }}"
+                               class="form-control management-input"
+                               maxlength="100"
+                               required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email{{ user.id }}"
+                               class="form-label">
+                            Email Address
+                        </label>
+                        <input type="email"
+                               id="email{{ user.id }}"
+                               name="email"
+                               value="{{ user.email }}"
+                               class="form-control management-input"
+                               maxlength="120"
+                               required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="role{{ user.id }}"
+                               class="form-label">
+                            Account Role
+                        </label>
+                        <select name="role"
+                                id="role{{ user.id }}"
+                                class="form-select management-input"
+                                {% if user.id == current_admin_id %}
+                                disabled
+                                {% endif %}>
+                            <option value="student"
+                                    {% if user.role == 'student' %}
+                                    selected
+                                    {% endif %}>
+                                Student
+                            </option>
+                            <option value="admin"
+                                    {% if user.role == 'admin' %}
+                                    selected
+                                    {% endif %}>
+                                Admin
+                            </option>
+                        </select>
+
+                        {% if user.id == current_admin_id %}
+                        <p class="management-muted small mt-2 mb-0">
+                            Your own admin role cannot be changed.
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn management-secondary-btn"
+                            data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                            class="btn management-primary-btn">
+                        <i class="bi bi-check2 me-1"></i>
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- DELETE USER -->
+<div class="modal fade" id="deleteUser{{ user.id }}"
+     tabindex="-1"
+     aria-labelledby="deleteUserTitle{{ user.id }}"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content management-modal">
+            <form method="POST"
+                  action="{{ url_for('delete_user', user_id=user.id) }}">
+                <input type="hidden" name="csrf_token"
+                       value="{{ csrf_token() }}">
+
+                <div class="modal-header">
+                    <h2 class="modal-title fs-5"
+                        id="deleteUserTitle{{ user.id }}">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        Delete User
+                    </h2>
+                    <button type="button" class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>
+                        Are you sure you want to delete
+                        <strong>{{ user.name }}</strong>?
+                    </p>
+                    <div class="management-warning">
+                        <i class="bi bi-exclamation-circle me-2"></i>
+                        This action cannot be undone.
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn management-secondary-btn"
+                            data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                            class="btn btn-danger"
+                            {% if user.id == current_admin_id %}
+                            disabled
+                            {% endif %}>
+                        <i class="bi bi-trash me-1"></i>
+                        Confirm Delete
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+{% endblock %}

@@ -7,6 +7,7 @@
 
     <!-- Input Section -->
     <form method="POST" enctype="multipart/form-data" class="glass-card p-4 mb-4">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <div class="mb-3">
         <label class="form-label text-light">Paste or Write Text</label>
         <textarea name="text" class="form-control glass-input" rows="4" placeholder="Enter text here..."></textarea>
@@ -15,9 +16,31 @@
         <label class="form-label text-light">Upload File</label>
         <input type="file" name="file" class="form-control glass-input">
       </div>
+
+      <label for="previous_file_id" class="form-label">
+                Select Previous File
+            </label>
+
+            <select name="previous_file_id" id="previous_file_id" class="form-select glass-input mb-3">
+
+                <option value="">Choose a previous document</option>
+
+                {% for file in previous_files %}
+                <option value="{{ file.id }}">
+                    {{ file.filename }}
+                </option>
+                {% endfor %}
+
+            </select>
       <button type="submit" class="btn glass-btn w-100">Generate Quiz</button>
     </form>
 
+    {% if error %}
+    <div class="alert alert-warning" role="alert">
+      {{ error }}
+    </div>
+    {% endif %}
+    
     {% if quizzes and quizzes|length > 0 %}
     <div id="quiz-container" class="glass-card p-4 text-center">
       <h5 id="quiz-question" class="text-white">{{ quizzes[0].question }}</h5>
@@ -38,7 +61,7 @@
     </div>
 
     <script>
-      const quizzes = {{ quizzes|tojson|safe }};
+      const quizzes = {{ quizzes| tojson | safe }};
       let currentIndex = 0;
       let score = 0;
       let answered = Array(quizzes.length).fill(false);

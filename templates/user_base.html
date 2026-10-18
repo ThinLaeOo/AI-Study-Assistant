@@ -1,0 +1,144 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+Upload Document | AI Study Assistant
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-8 col-xl-7">
+
+        <div class="glass-card p-4 p-md-5">
+
+            <div class="text-center mb-4">
+                <h2 class="fw-bold">
+                    Summarize Your Notes
+                </h2>
+
+                <p class="theme-description">
+                    Upload a new document or select
+                    a file you've uploaded before.
+                </p>
+            </div>
+
+            <form
+                action="{{ url_for('upload') }}"
+                method="POST"
+                enctype="multipart/form-data">
+
+                <!-- CSRF Protection -->
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token() }}">
+
+                <!-- Upload New File -->
+                <div class="mb-4">
+
+                    <label
+                        for="file"
+                        class="form-label fw-semibold">
+                        Upload New Document
+                    </label>
+
+                    <input
+                        type="file"
+                        class="form-control glass-input"
+                        id="file"
+                        name="file"
+                        accept=".pdf,.docx,.txt">
+
+                    <div class="form-text">
+                        Supported formats:
+                        PDF, DOCX, TXT
+                    </div>
+
+                </div>
+
+                <div class="text-center my-4">
+                    <span class="theme-description">
+                        — OR —
+                    </span>
+                </div>
+
+                <!-- Previous Files -->
+                <div class="mb-4">
+
+                    <label
+                        for="previous_file_id"
+                        class="form-label fw-semibold">
+                        Select Previous File
+                    </label>
+
+                    <select
+                        class="form-select glass-input"
+                        id="previous_file_id"
+                        name="previous_file_id">
+
+                        <option value="">
+                            Choose a previously uploaded file
+                        </option>
+
+                        {% for file in previous_files %}
+
+                        <option value="{{ file.id }}">
+                            {{ file.filename }}
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                    {% if not previous_files %}
+                    <small class="theme-description">
+                        You haven't uploaded any documents yet.
+                    </small>
+                    {% endif %}
+
+                </div>
+
+                <!-- Submit -->
+                <button
+                    type="submit"
+                    class="btn glass-btn w-100 py-3 fw-semibold">
+
+                    Generate Summary
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Prevent selecting both options -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const fileInput = document.getElementById('file');
+    const previousSelect = document.getElementById(
+        'previous_file_id'
+    );
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length > 0) {
+            previousSelect.value = '';
+        }
+    });
+
+    previousSelect.addEventListener('change', function () {
+        if (previousSelect.value) {
+            fileInput.value = '';
+        }
+    });
+
+});
+</script>
+
+{% endblock %}

@@ -10,6 +10,7 @@
             <div class="glass-card p-4 mb-4">
                 <h5 class="text-white mb-3">Account Setting</h5>
                 <form method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <p class="text-light text-center mb-3">Logged in as: {{ user.email }}</p>
                     <div class="mb-3">
                         <input type="email" class="form-control glass-input" id="email" name="email"
@@ -24,14 +25,33 @@
                         placeholder="Current Password">
                     <button type="submit" class="btn glass-btn w-100 mb-3">Update Password</button>
 
-                    <h5 class="text-white mt-4 mb-3">Preferences</h5>
-                    <div class="d-flex align-items-center justify-content-between">
-                        <span class="text-light">Dark Mode</span>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="darkModeSwitch">
-                            <label class="form-check-label text-light" for="darkModeSwitch">Toggle</label>
+
+                    <!-- User Appearance Settings -->
+                    <div class="glass-card p-4 mb-4">
+
+                        <h4 class="mb-3">Appearance</h4>
+
+                        <div class="theme-switch-row">
+
+                            <div>
+                                <h6 class="mb-1">Theme Preferences</h6>
+                                <p class="theme-description mb-0">
+                                    Personalize your study dashboard appearance.
+                                </p>
+                                <small class="theme-mode-label">
+                                    Dark Mode
+                                </small>
+                            </div>
+
+                            <div class="form-check form-switch">
+                                <input class="form-check-input theme-toggle" type="checkbox" role="switch"
+                                    aria-label="Enable dark mode">
+                            </div>
+
                         </div>
+
                     </div>
+
 
                     <button type="button" class="btn glass-btn w-100 mt-4" onclick="logout()">Log Out</button>
                 </form>
@@ -51,6 +71,7 @@
 
                 </div>
                 <form method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="file" name="avatar" class="form-control glass-input mb-3">
                     <button type="submit" class="btn glass-btn w-100 mb-2">Change Avatar</button>
                     <button type="submit" class="btn glass-btn w-100">Update</button>

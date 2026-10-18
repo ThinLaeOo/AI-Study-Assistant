@@ -1,0 +1,281 @@
+
+{% extends "admin_base.html" %}
+{% block title %}Manage Files | AI Study Assistant{% endblock %}
+
+{% block content %}
+<div class="management-page py-4 py-lg-5">
+
+    <!-- HEADER -->
+    <section class="management-hero mb-4">
+        <div class="d-flex align-items-center
+                    justify-content-between flex-wrap gap-3">
+            <div>
+                <span class="management-eyebrow">
+                    <i class="bi bi-shield-check me-2"></i>
+                    ADMINISTRATION
+                </span>
+
+                <h1 class="management-title mt-2 mb-2">
+                    File Management
+                </h1>
+
+                <p class="management-muted mb-0">
+                    Browse uploaded documents and
+                    manage file records.
+                </p>
+            </div>
+
+            <div class="management-hero-icon">
+                <i class="bi bi-folder2-open"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- FLASH MESSAGES -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}
+                    alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    {% endwith %}
+
+    <!-- FILE OVERVIEW -->
+    <section class="management-panel mb-4">
+        <div class="management-panel-body">
+            <div class="d-flex align-items-center gap-3">
+                <div class="management-summary-icon">
+                    <i class="bi bi-files"></i>
+                </div>
+
+                <div>
+                    <span class="management-muted">
+                        Total File Records
+                    </span>
+                    <h2 class="management-summary-value mb-0">
+                        {{ files|length }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FILE TABLE -->
+    <section class="management-panel">
+        <div class="management-panel-header">
+            <div>
+                <h2>
+                    <i class="bi bi-folder me-2"></i>
+                    Uploaded Documents
+                </h2>
+                <p class="management-muted mb-0">
+                    Files recorded in your application database
+                </p>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table management-table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col">File ID</th>
+                        <th scope="col">Document</th>
+                        <th scope="col">Uploaded By</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for file in files %}
+                    <tr>
+                        <td>
+                            <span class="management-muted">
+                                #{{ file.id }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="management-file-icon">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                </div>
+
+                                <strong class="management-filename">
+                                    {{ file.filename }}
+                                </strong>
+                            </div>
+                        </td>
+
+                        <td>
+                            <span class="management-owner">
+                                <i class="bi bi-person me-1"></i>
+                                {{ owners.get(file.user_id, 'Unknown') }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <div class="d-flex flex-wrap gap-2">
+                                <button type="button"
+                                        class="btn management-action-btn"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#viewFile{{ file.id }}">
+                                    <i class="bi bi-eye"></i>
+                                    View
+                                </button>
+
+                                <button type="button"
+                                        class="btn management-action-btn action-danger"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteFile{{ file.id }}">
+                                    <i class="bi bi-trash"></i>
+                                    Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4">
+                            <div class="management-empty-state">
+                                <i class="bi bi-folder-x"></i>
+                                <h3>No uploaded files</h3>
+                                <p>
+                                    File records will appear here
+                                    when students upload documents.
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</div>
+
+<!-- FILE MODALS -->
+{% for file in files %}
+
+<!-- VIEW FILE DETAILS -->
+<div class="modal fade" id="viewFile{{ file.id }}"
+     tabindex="-1"
+     aria-labelledby="viewFileTitle{{ file.id }}"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content management-modal">
+
+            <div class="modal-header">
+                <h2 class="modal-title fs-5"
+                    id="viewFileTitle{{ file.id }}">
+                    <i class="bi bi-file-earmark-text me-2"></i>
+                    File Details
+                </h2>
+
+                <button type="button" class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="management-file-preview">
+                    <i class="bi bi-file-earmark-text"></i>
+                    <h3>{{ file.filename }}</h3>
+                    <p class="management-muted mb-0">
+                        Uploaded document record
+                    </p>
+                </div>
+
+                <div class="management-detail-row">
+                    <span>File ID</span>
+                    <strong>#{{ file.id }}</strong>
+                </div>
+
+                <div class="management-detail-row">
+                    <span>Filename</span>
+                    <strong>{{ file.filename }}</strong>
+                </div>
+
+                <div class="management-detail-row">
+                    <span>Uploaded By</span>
+                    <strong>
+                        {{ owners.get(file.user_id, 'Unknown') }}
+                    </strong>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn management-secondary-btn"
+                        data-bs-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DELETE FILE RECORD -->
+<div class="modal fade" id="deleteFile{{ file.id }}"
+     tabindex="-1"
+     aria-labelledby="deleteFileTitle{{ file.id }}"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content management-modal">
+
+            <form method="POST"
+                  action="{{ url_for('delete_file', file_id=file.id) }}">
+
+                <input type="hidden"
+                       name="csrf_token"
+                       value="{{ csrf_token() }}">
+
+                <div class="modal-header">
+                    <h2 class="modal-title fs-5"
+                        id="deleteFileTitle{{ file.id }}">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        Delete File Record
+                    </h2>
+
+                    <button type="button" class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>
+                        Delete the database record for
+                        <strong>{{ file.filename }}</strong>?
+                    </p>
+
+                    <div class="management-warning">
+                        <i class="bi bi-info-circle me-2"></i>
+                        This action removes the database record only.
+                        The physical file will remain in the uploads folder.
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn management-secondary-btn"
+                            data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash me-1"></i>
+                        Confirm Delete
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+{% endblock %}

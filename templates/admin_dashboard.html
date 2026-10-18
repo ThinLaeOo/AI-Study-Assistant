@@ -1,35 +1,499 @@
-{% extends "base.html" %}
-{% block title %}Dashboard{% endblock %}
+
+{% extends "admin_base.html" %}
+
+{% block title %}Admin Dashboard | AI Study Assistant{% endblock %}
+
 {% block content %}
-<div class="row">
-  <div class="col-md-12">
-    <h2 class="mb-4 text-center">Welcome to Your Dashboard</h2>
-    <div class="row text-center">
-      <div class="col-md-4">
-        <div class="card shadow-sm mb-3">
-          <div class="card-body">
-            <h5 class="card-title">👥 Users</h5>
-            <p class="card-text">{{ total_users }}</p>
-          </div>
+
+<div class="admin-dashboard-page py-4 py-lg-5">
+
+    <!-- ADMIN HERO -->
+    <section class="admin-hero mb-4">
+        <div class="row align-items-center g-4">
+
+            <div class="col-lg-8">
+                <span class="admin-eyebrow">
+                    <i class="bi bi-shield-check me-2"></i>
+                    ADMIN WORKSPACE
+                </span>
+
+                <h1 class="admin-hero-title mt-3 mb-3">
+                    System
+                    <span class="admin-gradient-text">
+                        Overview.
+                    </span>
+                </h1>
+
+                <p class="admin-hero-description mb-4">
+                    Manage your AI Study Assistant platform,
+                    review student activity, and keep your
+                    learning environment organized.
+                </p>
+
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{{ url_for('manage_users') }}"
+                       class="btn admin-primary-btn">
+                        <i class="bi bi-people me-2"></i>
+                        Manage Users
+                        <i class="bi bi-arrow-right ms-2"></i>
+                    </a>
+
+                    <a href="{{ url_for('manage_files') }}"
+                       class="btn admin-secondary-btn">
+                        <i class="bi bi-folder2-open me-2"></i>
+                        Manage Files
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-4 d-none d-lg-flex
+                        justify-content-center">
+                <div class="admin-illustration">
+
+                    <div class="admin-illustration-circle">
+                        <i class="bi bi-shield-lock-fill"></i>
+                    </div>
+
+                    <span class="admin-floating-icon admin-float-one">
+                        <i class="bi bi-people-fill"></i>
+                    </span>
+
+                    <span class="admin-floating-icon admin-float-two">
+                        <i class="bi bi-database-check"></i>
+                    </span>
+
+                    <span class="admin-floating-icon admin-float-three">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </span>
+
+                </div>
+            </div>
+
         </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card shadow-sm mb-3">
-          <div class="card-body">
-            <h5 class="card-title">📂 Files</h5>
-            <p class="card-text">{{ total_files }}</p>
-          </div>
+    </section>
+
+
+    <!-- STATISTICS -->
+    <section class="mb-5">
+
+        <div class="admin-section-heading mb-4">
+            <span class="admin-section-label">
+                PLATFORM INSIGHTS
+            </span>
+
+            <h2 class="mt-2 mb-1">
+                Dashboard Statistics
+            </h2>
+
+            <p class="admin-muted mb-0">
+                A quick look at your application.
+            </p>
         </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card shadow-sm mb-3">
-          <div class="card-body">
-            <h5 class="card-title">⚡ Alerts</h5>
-            <p class="card-text">{{ alerts }}</p>
-          </div>
+
+        <div class="row g-4">
+
+            <!-- TOTAL USERS -->
+            <div class="col-sm-6 col-xl-3">
+                <div class="admin-stat-card">
+
+                    <div class="admin-stat-icon stat-users">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+
+                    <p class="admin-stat-label">
+                        Total Users
+                    </p>
+
+                    <h3 class="admin-stat-value">
+                        {{ total_users | default(0, true) }}
+                    </h3>
+
+                    <span class="admin-stat-description">
+                        Registered accounts
+                    </span>
+
+                </div>
+            </div>
+
+
+            <!-- TOTAL FILES -->
+            <div class="col-sm-6 col-xl-3">
+                <div class="admin-stat-card">
+
+                    <div class="admin-stat-icon stat-files">
+                        <i class="bi bi-file-earmark-text-fill"></i>
+                    </div>
+
+                    <p class="admin-stat-label">
+                        Total Files
+                    </p>
+
+                    <h3 class="admin-stat-value">
+                        {{ total_files | default(0, true) }}
+                    </h3>
+
+                    <span class="admin-stat-description">
+                        Recorded uploads
+                    </span>
+
+                </div>
+            </div>
+
+
+            <!-- RECENT LOGINS -->
+            <div class="col-sm-6 col-xl-3">
+                <div class="admin-stat-card">
+
+                    <div class="admin-stat-icon stat-logins">
+                        <i class="bi bi-box-arrow-in-right"></i>
+                    </div>
+
+                    <p class="admin-stat-label">
+                        Recent Logins
+                    </p>
+
+                    <h3 class="admin-stat-value">
+                        {{ recent_logins | default(0, true) }}
+                    </h3>
+
+                    <span class="admin-stat-description">
+                        Reported login activity
+                    </span>
+
+                </div>
+            </div>
+
+
+            <!-- ALERTS -->
+            <div class="col-sm-6 col-xl-3">
+                <div class="admin-stat-card">
+
+                    <div class="admin-stat-icon stat-alerts">
+                        <i class="bi bi-bell-fill"></i>
+                    </div>
+
+                    <p class="admin-stat-label">
+                        Alerts
+                    </p>
+
+                    <h3 class="admin-stat-value">
+                        {{ alerts | default(0, true) }}
+                    </h3>
+
+                    <span class="admin-stat-description">
+                        Reported alerts
+                    </span>
+
+                </div>
+            </div>
+
         </div>
-      </div>
-    </div>
-  </div>
+
+    </section>
+
+
+    <!-- QUICK MANAGEMENT -->
+    <section class="mb-5">
+
+        <div class="admin-section-heading mb-4">
+            <span class="admin-section-label">
+                ADMINISTRATION
+            </span>
+
+            <h2 class="mt-2 mb-1">
+                Quick Management
+            </h2>
+
+            <p class="admin-muted mb-0">
+                Access your administrative tools.
+            </p>
+        </div>
+
+        <div class="row g-4">
+
+            <!-- MANAGE USERS -->
+            <div class="col-md-4">
+
+                <a href="{{ url_for('manage_users') }}"
+                   class="admin-action-card">
+
+                    <div class="admin-action-icon action-users">
+                        <i class="bi bi-person-gear"></i>
+                    </div>
+
+                    <h3>Manage Users</h3>
+
+                    <p>
+                        View registered users and manage
+                        their account information.
+                    </p>
+
+                    <span class="admin-action-link">
+                        Open User Management
+                        <i class="bi bi-arrow-up-right"></i>
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- MANAGE FILES -->
+            <div class="col-md-4">
+
+                <a href="{{ url_for('manage_files') }}"
+                   class="admin-action-card">
+
+                    <div class="admin-action-icon action-files">
+                        <i class="bi bi-folder2-open"></i>
+                    </div>
+
+                    <h3>Manage Files</h3>
+
+                    <p>
+                        Review documents uploaded
+                        by students to the platform.
+                    </p>
+
+                    <span class="admin-action-link">
+                        Open File Management
+                        <i class="bi bi-arrow-up-right"></i>
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- ADMIN SETTINGS -->
+            <div class="col-md-4">
+
+                <a href="{{ url_for('admin_settings') }}"
+                   class="admin-action-card">
+
+                    <div class="admin-action-icon action-settings">
+                        <i class="bi bi-gear-fill"></i>
+                    </div>
+
+                    <h3>Admin Settings</h3>
+
+                    <p>
+                        Access your administrator
+                        profile and preferences.
+                    </p>
+
+                    <span class="admin-action-link">
+                        Open Settings
+                        <i class="bi bi-arrow-up-right"></i>
+                    </span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- RECENT ACTIVITY AND NOTIFICATIONS -->
+    <section class="mb-4">
+
+        <div class="admin-section-heading mb-4">
+            <span class="admin-section-label">
+                MONITORING
+            </span>
+
+            <h2 class="mt-2 mb-1">
+                Activity & Notifications
+            </h2>
+
+            <p class="admin-muted mb-0">
+                Review recent activity and system information.
+            </p>
+        </div>
+
+        <div class="row g-4">
+
+            <!-- RECENT ACTIVITIES -->
+            <div class="col-lg-6">
+
+                <div class="admin-panel-card">
+
+                    <div class="admin-panel-header">
+
+                        <div class="d-flex
+                                    align-items-center gap-3">
+
+                            <div class="admin-panel-icon">
+                                <i class="bi bi-clock-history"></i>
+                            </div>
+
+                            <div>
+                                <h3 class="mb-1">
+                                    Recent Activities
+                                </h3>
+
+                                <p class="admin-muted mb-0">
+                                    Latest recorded actions
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="admin-panel-content">
+
+                        {% if recent_activities %}
+
+                            {% for activity in recent_activities %}
+
+                            <div class="admin-activity-item">
+
+                                <div class="admin-activity-icon">
+                                    <i class="bi bi-activity"></i>
+                                </div>
+
+                                <div class="admin-activity-text">
+
+                                    <strong>
+                                        {{ activity.feature }}
+                                    </strong>
+
+                                    <p class="mb-0">
+                                        {{ activity.title }}
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <div class="admin-empty-state">
+
+                                <i class="bi bi-clock-history"></i>
+
+                                <h4>No recent activities</h4>
+
+                                <p>
+                                    Recorded study activity
+                                    will appear here.
+                                </p>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- SYSTEM NOTIFICATIONS -->
+            <div class="col-lg-6">
+
+                <div class="admin-panel-card">
+
+                    <div class="admin-panel-header">
+
+                        <div class="d-flex
+                                    align-items-center gap-3">
+
+                            <div class="admin-panel-icon
+                                        notification-panel-icon">
+                                <i class="bi bi-bell"></i>
+                            </div>
+
+                            <div>
+                                <h3 class="mb-1">
+                                    System Notifications
+                                </h3>
+
+                                <p class="admin-muted mb-0">
+                                    Platform information
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="admin-panel-content">
+
+                        <div class="admin-notification-item">
+
+                            <div class="admin-notification-icon">
+                                <i class="bi bi-info-circle"></i>
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Application Dashboard
+                                </strong>
+
+                                <p class="mb-0">
+                                    View user and file totals
+                                    using the statistics above.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="admin-notification-item">
+
+                            <div class="admin-notification-icon">
+                                <i class="bi bi-folder-check"></i>
+                            </div>
+
+                            <div>
+                                <strong>
+                                    File Management
+                                </strong>
+
+                                <p class="mb-0">
+                                    Uploaded files with database
+                                    records can be reviewed
+                                    in Manage Files.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="admin-notification-item">
+
+                            <div class="admin-notification-icon">
+                                <i class="bi bi-shield-check"></i>
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Administration
+                                </strong>
+
+                                <p class="mb-0">
+                                    Use the management tools
+                                    to review users and files.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
 </div>
+
 {% endblock %}

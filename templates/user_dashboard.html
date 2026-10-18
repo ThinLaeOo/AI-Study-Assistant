@@ -1,72 +1,422 @@
+
 {% extends "base.html" %}
+
+{% block title %}Dashboard | AI Study Assistant{% endblock %}
+
 {% block content %}
-<div class="container py-5">
 
-  <!-- Dashboard Title -->
-  <h2 class="text-center mb-5 text-white">AI Study Assistant Dashboard</h2>
+<div class="student-dashboard py-4 py-lg-5">
 
-  <!-- Feature Cards -->
-  <div class="row justify-content-center">
+    <!-- WELCOME SECTION -->
+    <section class="dashboard-hero mb-4">
 
-    <div class="glass-card p-4 mt-4">
+        <div class="row align-items-center g-4">
 
-      <h4>Recent Flashcards</h4>
+            <div class="col-lg-8">
 
-      {% if recent_flashcards %}
-      <ul>
-        {% for card in recent_flashcards %}
-        <li>{{ card.topic[:50]}}...</li>
-        {% endfor %}
-      </ul>
-      {% else %}
-      <p>No flashcards generated yet.</p>
-      {% endif %}
+                <span class="dashboard-eyebrow">
+                    <i class="bi bi-stars me-2"></i>
+                    YOUR STUDY WORKSPACE
+                </span>
 
-    </div>
+                <h1 class="dashboard-heading mt-3 mb-3">
+                    Make every study
+                    <span class="dashboard-gradient-text">
+                        session count.
+                    </span>
+                </h1>
 
-    <div class="glass-card p-4 mt-4 mb-4">
+                <p class="dashboard-subtitle mb-4">
+                    Transform your notes into clear summaries,
+                    useful flashcards, and practice quizzes.
+                    Everything you need to study in one place.
+                </p>
 
-        <h4>Recent Quizzes</h4>
+                <div class="d-flex flex-wrap gap-2">
 
-        {% if recent_quizzes %}
-            <ul>
-            {% for quiz in recent_quizzes %}
-                <li>{{ quiz.Column[:50] }}...</li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            <p>No quizzes generated yet.</p>
-        {% endif %}
+                    <a href="{{ url_for('summarize') }}"
+                       class="btn dashboard-primary-btn">
 
-    </div>
+                        <i class="bi bi-file-earmark-text me-2"></i>
+                        Start Studying
 
-    <!-- Summarize -->
-    <div class="col-md-4 mb-4">
-      <div class="glass-card p-4 text-center">
-        <h5 class="mb-3">Summarize</h5>
-        <p>Upload notes or text to generate summaries.</p>
-        <a href="{{ url_for('summarize') }}" class="btn btn-light">Go to Summarize</a>
-      </div>
-    </div>
+                        <i class="bi bi-arrow-right ms-2"></i>
+                    </a>
 
-    <!-- Flashcards -->
-    <div class="col-md-4 mb-4">
-      <div class="glass-card p-4 text-center">
-        <h5 class="mb-3">Flashcards</h5>
-        <p>Create and review flashcards from your study material.</p>
-        <a href="{{ url_for('flashcards') }}" class="btn btn-light">Go to Flashcards</a>
-      </div>
-    </div>
+                    <a href="{{ url_for('flashcards') }}"
+                       class="btn dashboard-secondary-btn">
 
-    <!-- Quizzes -->
-    <div class="col-md-4 mb-4">
-      <div class="glass-card p-4 text-center">
-        <h5 class="mb-3">Quizzes</h5>
-        <p>Test your knowledge with auto‑generated quizzes.</p>
-        <a href="{{ url_for('quizzes') }}" class="btn btn-light">Go to Quizzes</a>
-      </div>
-    </div>
+                        <i class="bi bi-collection me-2"></i>
+                        Review Flashcards
+                    </a>
 
-  </div>
+                </div>
+
+            </div>
+
+            <div class="col-lg-4 d-none d-lg-flex
+                        justify-content-center">
+
+                <div class="dashboard-illustration">
+
+                    <div class="illustration-circle">
+                        <i class="bi bi-mortarboard-fill"></i>
+                    </div>
+
+                    <span class="floating-icon icon-one">
+                        <i class="bi bi-lightbulb-fill"></i>
+                    </span>
+
+                    <span class="floating-icon icon-two">
+                        <i class="bi bi-book-fill"></i>
+                    </span>
+
+                    <span class="floating-icon icon-three">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FEATURE SECTION -->
+    <section class="mb-5">
+
+        <div class="dashboard-section-heading mb-4">
+
+            <div>
+                <span class="dashboard-section-label">
+                    STUDY TOOLS
+                </span>
+
+                <h2 class="mt-2 mb-1">
+                    What would you like to do?
+                </h2>
+
+                <p class="dashboard-muted mb-0">
+                    Choose a tool to continue learning.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="row g-4">
+
+            <!-- SUMMARIZE -->
+            <div class="col-md-6 col-xl-4">
+
+                <a href="{{ url_for('summarize') }}"
+                   class="dashboard-feature-card
+                          feature-summary">
+
+                    <div class="feature-icon">
+                        <i class="bi bi-file-earmark-text"></i>
+                    </div>
+
+                    <h3>Summarize Notes</h3>
+
+                    <p>
+                        Turn lengthy study materials into
+                        concise, easy-to-understand summaries.
+                    </p>
+
+                    <span class="feature-action">
+                        Create Summary
+                        <i class="bi bi-arrow-up-right"></i>
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- FLASHCARDS -->
+            <div class="col-md-6 col-xl-4">
+
+                <a href="{{ url_for('flashcards') }}"
+                   class="dashboard-feature-card
+                          feature-flashcards">
+
+                    <div class="feature-icon">
+                        <i class="bi bi-collection"></i>
+                    </div>
+
+                    <h3>Generate Flashcards</h3>
+
+                    <p>
+                        Create study cards to help you
+                        remember important facts and concepts.
+                    </p>
+
+                    <span class="feature-action">
+                        Create Flashcards
+                        <i class="bi bi-arrow-up-right"></i>
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- QUIZZES -->
+            <div class="col-md-6 col-xl-4">
+
+                <a href="{{ url_for('quizzes') }}"
+                   class="dashboard-feature-card
+                          feature-quizzes">
+
+                    <div class="feature-icon">
+                        <i class="bi bi-patch-question"></i>
+                    </div>
+
+                    <h3>Practice Quizzes</h3>
+
+                    <p>
+                        Test your understanding with
+                        automatically generated questions.
+                    </p>
+
+                    <span class="feature-action">
+                        Generate Quiz
+                        <i class="bi bi-arrow-up-right"></i>
+                    </span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- RECENT ACTIVITY -->
+    <section class="mb-4">
+
+        <div class="dashboard-section-heading mb-4">
+
+            <div>
+
+                <span class="dashboard-section-label">
+                    YOUR LEARNING
+                </span>
+
+                <h2 class="mt-2 mb-1">
+                    Recent Activity
+                </h2>
+
+                <p class="dashboard-muted mb-0">
+                    Pick up where you left off.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="row g-4">
+
+            <!-- RECENT FLASHCARDS -->
+            <div class="col-lg-6">
+
+                <div class="dashboard-activity-card">
+
+                    <div class="activity-header">
+
+                        <div class="d-flex
+                                    align-items-center gap-3">
+
+                            <div class="activity-icon
+                                        flashcard-activity-icon">
+
+                                <i class="bi bi-collection"></i>
+
+                            </div>
+
+                            <div>
+                                <h3 class="mb-1">
+                                    Recent Flashcards
+                                </h3>
+
+                                <p class="dashboard-muted mb-0">
+                                    Your latest study topics
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <a href="{{ url_for('flashcards') }}"
+                           class="activity-header-link"
+                           aria-label="Open flashcards">
+
+                            <i class="bi bi-arrow-up-right"></i>
+
+                        </a>
+
+                    </div>
+
+                    <div class="activity-content">
+
+                        {% if recent_flashcards %}
+
+                            {% for card in recent_flashcards %}
+
+                            <div class="activity-list-item">
+
+                                <div class="activity-list-icon">
+                                    <i class="bi bi-card-text"></i>
+                                </div>
+
+                                <div class="activity-item-text">
+
+                                    <span>
+                                        {{ card.topic[:65] }}
+                                        {% if card.topic|length > 65 %}
+                                            ...
+                                        {% endif %}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <div class="activity-empty-state">
+
+                                <i class="bi bi-journals"></i>
+
+                                <h4>No flashcards yet</h4>
+
+                                <p>
+                                    Generate your first set
+                                    of flashcards to start reviewing.
+                                </p>
+
+                                <a href="{{ url_for('flashcards') }}"
+                                   class="btn dashboard-small-btn">
+
+                                    Create Flashcards
+
+                                </a>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- RECENT QUIZZES -->
+            <div class="col-lg-6">
+
+                <div class="dashboard-activity-card">
+
+                    <div class="activity-header">
+
+                        <div class="d-flex
+                                    align-items-center gap-3">
+
+                            <div class="activity-icon
+                                        quiz-activity-icon">
+
+                                <i class="bi bi-clipboard-check"></i>
+
+                            </div>
+
+                            <div>
+                                <h3 class="mb-1">
+                                    Recent Quizzes
+                                </h3>
+
+                                <p class="dashboard-muted mb-0">
+                                    Your latest practice questions
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <a href="{{ url_for('quizzes') }}"
+                           class="activity-header-link"
+                           aria-label="Open quizzes">
+
+                            <i class="bi bi-arrow-up-right"></i>
+
+                        </a>
+
+                    </div>
+
+                    <div class="activity-content">
+
+                        {% if recent_quizzes %}
+
+                            {% for quiz in recent_quizzes %}
+
+                            <div class="activity-list-item">
+
+                                <div class="activity-list-icon">
+                                    <i class="bi bi-question-circle"></i>
+                                </div>
+
+                                <div class="activity-item-text">
+
+                                    <span>
+                                        {{ quiz.question[:65] }}
+                                        {% if quiz.question|length > 65 %}
+                                            ...
+                                        {% endif %}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <div class="activity-empty-state">
+
+                                <i class="bi bi-clipboard2-data"></i>
+
+                                <h4>No quizzes yet</h4>
+
+                                <p>
+                                    Generate a practice quiz
+                                    to test your understanding.
+                                </p>
+
+                                <a href="{{ url_for('quizzes') }}"
+                                   class="btn dashboard-small-btn">
+
+                                    Create Quiz
+
+                                </a>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
 </div>
+
 {% endblock %}

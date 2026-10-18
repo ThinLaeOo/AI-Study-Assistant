@@ -1,0 +1,207 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Admin Settings{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <h2 class="text-center text-white fw-bold mb-4">
+        Admin Settings
+    </h2>
+
+    <!-- Feedback Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }} alert-dismissible fade show">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+    {% endwith %}
+
+    <div class="row justify-content-center g-4">
+
+        <!-- Account Settings -->
+        <div class="col-lg-7">
+
+            <div class="glass-card p-4 mb-4">
+                <h5 class="text-white mb-3">
+                    Account Information
+                </h5>
+
+                <p class="text-light">
+                    <strong>Name:</strong> {{ user.name }}
+                </p>
+
+                <p class="text-light">
+                    <strong>Email:</strong> {{ user.email }}
+                </p>
+
+                <p class="text-light">
+                    <strong>Role:</strong>
+                    <span class="badge bg-primary">
+                        {{ user.role }}
+                    </span>
+                </p>
+            </div>
+
+            <!-- Update Email -->
+            <div class="glass-card p-4 mb-4">
+                <h5 class="text-white mb-3">
+                    Update Email
+                </h5>
+
+                <form method="POST">
+                    <input type="hidden" name="action" value="update_email">
+
+                    <label class="text-light mb-2">
+                        New Email
+                    </label>
+
+                    <input type="email" name="email" class="form-control glass-input mb-3" value="{{ user.email }}"
+                        required>
+
+                    <label class="text-light mb-2">
+                        Current Password
+                    </label>
+
+                    <input type="password" name="current_password" class="form-control glass-input mb-3" required>
+
+                    <button type="submit" class="btn glass-btn w-100">
+                        Update Email
+                    </button>
+                </form>
+            </div>
+
+            <!-- Change Password -->
+            <div class="glass-card p-4 mb-4">
+                <h5 class="text-white mb-3">
+                    Change Password
+                </h5>
+
+                <form method="POST">
+                    <input type="hidden" name="action" value="update_password">
+
+                    <label class="text-light mb-2">
+                        Current Password
+                    </label>
+
+                    <input type="password" name="current_password" class="form-control glass-input mb-3" required>
+
+                    <label class="text-light mb-2">
+                        New Password
+                    </label>
+
+                    <input type="password" name="new_password" class="form-control glass-input mb-3" minlength="12"
+                        required>
+
+                    <label class="text-light mb-2">
+                        Confirm New Password
+                    </label>
+
+                    <input type="password" name="confirm_password" class="form-control glass-input mb-3" minlength="12"
+                        required>
+
+                    <button type="submit" class="btn glass-btn w-100">
+                        Change Password
+                    </button>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- Profile and Preferences -->
+        <div class="col-lg-4">
+
+            <div class="glass-card p-4 text-center mb-4">
+
+                <h5 class="text-white mb-4">
+                    Admin Profile
+                </h5>
+
+                <div class="avatar-circle mb-3 mx-auto">
+                    {% if user.avatar %}
+                    <img src="{{ url_for('static', filename='uploads/' + user.avatar) }}" class="avatar-img"
+                        alt="Admin profile picture">
+                    {% else %}
+                    <div class="avatar-placeholder">
+                        +
+                    </div>
+                    {% endif %}
+                </div>
+
+                <h5 class="text-white">
+                    {{ user.name }}
+                </h5>
+
+                <p class="text-light">
+                    {{ user.email }}
+                </p>
+
+                <span class="badge bg-primary mb-4">
+                    Administrator
+                </span>
+
+                <form method="POST" enctype="multipart/form-data">
+
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                    <input type="hidden" name="action" value="update_avatar">
+
+                    <input type="file" name="avatar" accept=".png,.jpg,.jpeg,.webp"
+                        class="form-control glass-input mb-3" required>
+
+                    <button type="submit" class="btn glass-btn w-100">
+                        Change Avatar
+                    </button>
+                </form>
+            </div>
+
+
+            <!-- Appearance Settings -->
+            <div class="glass-card p-4 mb-4">
+
+                <h4 class="mb-3">Appearance</h4>
+
+                <div class="theme-switch-row">
+
+                    <div>
+                        <h6 class="mb-1">Website Theme</h6>
+                        <p class="theme-description mb-0">
+                            Switch between light and dark appearance.
+                        </p>
+                        <small class="theme-mode-label">
+                            Dark Mode
+                        </small>
+                    </div>
+
+                    <div class="form-check form-switch">
+                        <input class="form-check-input theme-toggle" type="checkbox" role="switch"
+                            aria-label="Enable dark mode">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="glass-card p-4">
+                <h5 class="text-white mb-3">
+                    Session
+                </h5>
+
+                <p class="text-light">
+                    Sign out of your administrator account.
+                </p>
+
+                <a href="{{ url_for('logout') }}" class="btn btn-outline-danger w-100">
+                    Log Out
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

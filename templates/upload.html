@@ -3,13 +3,72 @@
 {% block content %}
 <h2>Upload Study Materials</h2>
 <form method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="mb-3">
-        <label for="file" class="form-label">Choose File (PDF, DOCX, TXT)</label>
-        <input type="file" class="form-control" id="file" name="file">
+        <label for="file" class="form-label fw-semibold">
+            Upload New Document
+        </label>
+
+        <div class="mb-3 text-center">
+                <input type="file" name="file" class="form-control glass-input">
+                <p class="mt-2 text-light">Drag your file here or click to upload</p>
+        </div>
+
+        <label for="previous_file_id" class="form-label fw-semibold">
+            Or Select a Previous File
+        </label>
+
+        <select name="previous_file_id" id="previous_file_id" class="form-select glass-input">
+
+            <option value="">
+                Choose a previously uploaded document
+            </option>
+
+            {% for file in previous_files %}
+            <option value="{{ file.id }}">
+                {{ file.filename }}
+            </option>
+            {% endfor %}
+
+        </select>
+
+        {% if not previous_files %}
+        <small class="theme-description">
+            No previous uploads available.
+        </small>
+        {% endif %}
+
     </div>
     <button type="submit" class="btn btn-primary">Upload</button>
 </form>
 {% if message %}
 <div class="alert alert-info mt-3">{{ message }}</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const fileInput = document.querySelector(
+        'input[name="file"]'
+    );
+
+    const previousSelect = document.getElementById(
+        'previous_file_id'
+    );
+
+    if (!fileInput || !previousSelect) return;
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length > 0) {
+            previousSelect.value = '';
+        }
+    });
+
+    previousSelect.addEventListener('change', function () {
+        if (previousSelect.value) {
+            fileInput.value = '';
+        }
+    });
+
+});
+</script>
 {% endif %}
 {% endblock %}

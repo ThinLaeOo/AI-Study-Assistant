@@ -7,6 +7,7 @@
 
     <!-- Input Section -->
     <form method="POST" enctype="multipart/form-data" class="glass-card p-4 mb-4">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <div class="mb-3">
         <label class="form-label text-light">Paste or Write Text</label>
         <textarea name="text" class="form-control glass-input" rows="4" placeholder="Enter text here..."></textarea>
@@ -15,6 +16,22 @@
         <label class="form-label text-light">Upload File</label>
         <input type="file" name="file" class="form-control glass-input">
       </div>
+
+      <label for="previous_file_id" class="form-label">
+                Select Previous File
+            </label>
+
+            <select name="previous_file_id" id="previous_file_id" class="form-select glass-input mb-3">
+
+                <option value="">Choose a previous document</option>
+
+                {% for file in previous_files %}
+                <option value="{{ file.id }}">
+                    {{ file.filename }}
+                </option>
+                {% endfor %}
+
+            </select>
       <button type="submit" class="btn glass-btn w-100">Generate Flashcards</button>
     </form>
 

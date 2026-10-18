@@ -1,27 +1,216 @@
+
 {% extends "base.html" %}
-{% block title %}Register{% endblock %}
+{% block title %}Register | AI Study Assistant{% endblock %}
+
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-md-6">
-    <h2 class="mb-4 text-center">Create Account</h2>
-    <form method="POST" class="card p-4 shadow-sm">
-      <div class="mb-3">
-        <label class="form-label">Name</label>
-        <input type="text" name="name" class="form-control" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Email</label>
-        <input type="email" name="email" class="form-control" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Password</label>
-        <input type="password" name="password" class="form-control" required>
-      </div>
-      <button type="submit" class="btn btn-primary w-100">Register</button>
-    </form>
-    <p class="mt-3 text-center">
-      Already have an account? <a href="{{ url_for('login') }}">Login here</a>
-    </p>
-  </div>
+
+<div class="auth-page">
+    <div class="auth-container">
+
+        <!-- LEFT BRAND PANEL -->
+        <div class="auth-brand-panel">
+
+            <div class="auth-brand-content">
+
+                <div class="auth-brand-badge">
+                    <i class="bi bi-stars me-2"></i>
+                    YOUR LEARNING JOURNEY
+                </div>
+
+                <div class="auth-brand-icon">
+                    <i class="bi bi-book-half"></i>
+                </div>
+
+                <h1>
+                    Learn better.<br>
+                    <span>Grow every day.</span>
+                </h1>
+
+                <p>
+                    Join AI Study Assistant and transform
+                    your study materials into summaries,
+                    flashcards, and practice quizzes.
+                </p>
+
+                <div class="auth-brand-features">
+
+                    <div>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Organize your learning
+                    </div>
+
+                    <div>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Review key concepts
+                    </div>
+
+                    <div>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Test your understanding
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="auth-decoration auth-decoration-one"></div>
+            <div class="auth-decoration auth-decoration-two"></div>
+
+        </div>
+
+
+        <!-- RIGHT REGISTER FORM -->
+        <div class="auth-form-panel">
+
+            <div class="auth-form-content">
+
+                <div class="auth-mobile-logo">
+                    <i class="bi bi-mortarboard-fill"></i>
+                    AI Study Assistant
+                </div>
+
+                <span class="auth-eyebrow">
+                    GET STARTED
+                </span>
+
+                <h2>Create your account</h2>
+
+                <p class="auth-description">
+                    Start studying smarter today.
+                </p>
+
+                <form method="POST"
+                      action="{{ url_for('register') }}">
+
+                    <input type="hidden"
+                           name="csrf_token"
+                           value="{{ csrf_token() }}">
+
+                    <!-- NAME -->
+                    <div class="auth-field">
+
+                        <label for="registerName">
+                            Full Name
+                        </label>
+
+                        <div class="auth-input-wrapper">
+
+                            <i class="bi bi-person"></i>
+
+                            <input
+                                type="text"
+                                id="registerName"
+                                name="name"
+                                class="auth-input"
+                                placeholder="Enter your full name"
+                                autocomplete="name"
+                                maxlength="100"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+                    <div class="auth-field">
+
+                        <label for="registerEmail">
+                            Email Address
+                        </label>
+
+                        <div class="auth-input-wrapper">
+
+                            <i class="bi bi-envelope"></i>
+
+                            <input
+                                type="email"
+                                id="registerEmail"
+                                name="email"
+                                class="auth-input"
+                                placeholder="Enter your email"
+                                autocomplete="email"
+                                maxlength="120"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+                    <div class="auth-field">
+
+                        <label for="registerPassword">
+                            Password
+                        </label>
+
+                        <div class="auth-input-wrapper">
+
+                            <i class="bi bi-lock"></i>
+
+                            <input
+                                type="password"
+                                id="registerPassword"
+                                name="password"
+                                class="auth-input auth-password-input"
+                                placeholder="Create a password"
+                                autocomplete="new-password"
+                                minlength="8"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="auth-password-toggle"
+                                aria-label="Show password"
+                                aria-pressed="false"
+                                aria-controls="registerPassword">
+
+                                <i class="bi bi-eye"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <p class="auth-password-hint">
+                        Use at least 8 characters for your password.
+                    </p>
+
+
+                    <!-- SUBMIT -->
+                    <button type="submit"
+                            class="auth-submit-btn">
+
+                        Create Account
+
+                        <i class="bi bi-arrow-right"></i>
+
+                    </button>
+
+                </form>
+
+
+                <div class="auth-divider">
+                    <span>ALREADY REGISTERED?</span>
+                </div>
+
+                <p class="auth-switch-text">
+                    Already have an account?
+
+                    <a href="{{ url_for('login') }}">
+                        Sign in
+                    </a>
+                </p>
+
+            </div>
+
+        </div>
+    </div>
 </div>
+
 {% endblock %}

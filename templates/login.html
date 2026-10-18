@@ -1,23 +1,184 @@
+
 {% extends "base.html" %}
-{% block title %}Login{% endblock %}
+{% block title %}Login | AI Study Assistant{% endblock %}
+
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-md-6">
-    <h2 class="mb-4 text-center">Login</h2>
-    <form method="POST" class="card p-4 shadow-sm">
-      <div class="mb-3">
-        <label class="form-label">Email</label>
-        <input type="email" name="email" class="form-control" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Password</label>
-        <input type="password" name="password" class="form-control" required>
-      </div>
-      <button type="submit" class="btn btn-success w-100">Login</button>
-    </form>
-    <p class="mt-3 text-center">
-      Don’t have an account? <a href="{{ url_for('register') }}">Register here</a>
-    </p>
-  </div>
+
+<div class="auth-page">
+    <div class="auth-container">
+
+        <!-- LEFT BRAND PANEL -->
+        <div class="auth-brand-panel">
+
+            <div class="auth-brand-content">
+
+                <div class="auth-brand-badge">
+                    <i class="bi bi-stars me-2"></i>
+                    AI-POWERED LEARNING
+                </div>
+
+                <div class="auth-brand-icon">
+                    <i class="bi bi-mortarboard-fill"></i>
+                </div>
+
+                <h1>
+                    Study smarter.<br>
+                    <span>Achieve more.</span>
+                </h1>
+
+                <p>
+                    Your personal AI Study Assistant
+                    helps you understand complex topics,
+                    review important concepts, and
+                    prepare for assessments.
+                </p>
+
+                <div class="auth-brand-features">
+
+                    <div>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Generate clear summaries
+                    </div>
+
+                    <div>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Create useful flashcards
+                    </div>
+
+                    <div>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Practice with quizzes
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="auth-decoration auth-decoration-one"></div>
+            <div class="auth-decoration auth-decoration-two"></div>
+
+        </div>
+
+
+        <!-- RIGHT LOGIN FORM -->
+        <div class="auth-form-panel">
+
+            <div class="auth-form-content">
+
+                <div class="auth-mobile-logo">
+                    <i class="bi bi-mortarboard-fill"></i>
+                    AI Study Assistant
+                </div>
+
+                <span class="auth-eyebrow">
+                    WELCOME BACK
+                </span>
+
+                <h2>Sign in to your account</h2>
+
+                <p class="auth-description">
+                    Continue your learning journey.
+                </p>
+
+                <form method="POST" action="{{ url_for('login') }}">
+
+                    <input type="hidden"
+                           name="csrf_token"
+                           value="{{ csrf_token() }}">
+
+                    <!-- EMAIL -->
+                    <div class="auth-field">
+
+                        <label for="loginEmail">
+                            Email Address
+                        </label>
+
+                        <div class="auth-input-wrapper">
+
+                            <i class="bi bi-envelope"></i>
+
+                            <input
+                                type="email"
+                                id="loginEmail"
+                                name="email"
+                                class="auth-input"
+                                placeholder="Enter your email"
+                                autocomplete="email"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+                    <div class="auth-field">
+
+                        <label for="loginPassword">
+                            Password
+                        </label>
+
+                        <div class="auth-input-wrapper">
+
+                            <i class="bi bi-lock"></i>
+
+                            <input
+                                type="password"
+                                id="loginPassword"
+                                name="password"
+                                class="auth-input auth-password-input"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="auth-password-toggle"
+                                aria-label="Show password"
+                                aria-pressed="false"
+                                aria-controls="loginPassword">
+
+                                <i class="bi bi-eye"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- SUBMIT -->
+                    <button type="submit"
+                            class="auth-submit-btn">
+
+                        Sign In
+
+                        <i class="bi bi-arrow-right"></i>
+
+                    </button>
+
+                </form>
+
+
+                <div class="auth-divider">
+                    <span>NEW TO AI STUDY ASSISTANT?</span>
+                </div>
+
+                <p class="auth-switch-text">
+                    Don't have an account?
+
+                    <a href="{{ url_for('register') }}">
+                        Create an account
+                    </a>
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
 </div>
+
 {% endblock %}
